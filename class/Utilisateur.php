@@ -61,52 +61,6 @@ class Utilisateur
         return $this->id;
     }
 
-    // Méthodes de la classe Utilisateur
-    public function inscription()
-    {
-        $stmt = $this->pdo->prepare("INSERT INTO utilisateurs (nom, prenom, pseudo, email, mot_de_passe, date_naissance, genre, preference, bio, localisation) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-        $stmt->bindParam(':nom', $this->nom, PDO::PARAM_STR);
-        $stmt->bindParam(':prenom', $this->prenom, PDO::PARAM_STR);
-        $stmt->bindParam(':pseudo', $this->pseudo, PDO::PARAM_STR);
-        $stmt->bindParam(':email', $this->email, PDO::PARAM_STR);
-        $stmt->bindParam(':mot_de_passe', password_hash($this->motDePasse, PASSWORD_DEFAULT), PDO::PARAM_STR);
-        $stmt->bindParam(':date_naissance', $this->date_naissance, PDO::PARAM_INT);
-        $stmt->bindParam(':genre', $this->genre, PDO::PARAM_STR);
-        $stmt->bindParam(':preference', $this->preference, PDO::PARAM_STR);
-        $stmt->bindParam(':bio', $this->bio, PDO::PARAM_STR);
-        $stmt->bindParam(':localisation', $this->localisation, PDO::PARAM_STR);
-
-        // Exécuter la requête
-        $stmt->execute();
-    }
-
-    public function connexion($email, $motDePasse)
-    {
-        $stmt = $this->pdo->prepare("SELECT * FROM utilisateurs WHERE email = :email");
-        $stmt->bindParam(':email', $email, PDO::PARAM_STR);
-        $stmt->execute();
-        $user = $stmt->fetch();
-
-        if ($user && password_verify($motDePasse, $user['mot_de_passe'])) {
-            return $user['id']; // Retourne l'ID utilisateur si la connexion est réussie
-        }
-        return false; // Identifiants incorrects
-    }
-
-    public function seConnecter($email, $mot_de_passe)
-    {
-        $stmt = $this->pdo->prepare("SELECT * FROM utilisateurs WHERE email = :email");
-        $stmt->bindParam(':email', $email, PDO::PARAM_STR);
-        $stmt->execute();
-        $user = $stmt->fetch();
-
-        //Si l'email existe et que le mot de passe correspond, on est loggué et redirigé avec la page index
-        if ($user && password_verify($mot_de_passe, $user['mot_de_passe'])) {
-            return $user;
-        }
-        return null;
-    }
-
     public function sInscrire() 
     {
         $stmt = $this->pdo->prepare("INSERT INTO utilisateurs (nom, prenom, pseudo, email, mot_de_passe, date_naissance, genre, preference, bio, localisation) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
