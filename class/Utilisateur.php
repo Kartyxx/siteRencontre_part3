@@ -61,6 +61,21 @@ class Utilisateur
         return $this->id;
     }
 
+
+    public function seConnecter($email, $mot_de_passe)
+    {
+        $stmt = $this->pdo->prepare("SELECT * FROM utilisateurs WHERE email = :email");
+        $stmt->bindParam(':email', $email, PDO::PARAM_STR);
+        $stmt->execute();
+        $user = $stmt->fetch();
+
+        //Si l'email existe et que le mot de passe correspond, on est loggué et redirigé avec la page index
+        if ($user && password_verify($mot_de_passe, $user['mot_de_passe'])) {
+            return $user;
+        }
+        return null;
+    }
+
     public function sInscrire() 
     {
         $stmt = $this->pdo->prepare("INSERT INTO utilisateurs (nom, prenom, pseudo, email, mot_de_passe, date_naissance, genre, preference, bio, localisation) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
