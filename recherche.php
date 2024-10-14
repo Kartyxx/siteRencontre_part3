@@ -20,6 +20,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['recherche'])) {
     $genre = $_GET['genre'] ?? null;
     $localisation = $_GET['localisation'] ?? null;
 
+    $date = new DateTime();
+    $date->modify("-$age years");
+
+    $dateNaiss = $date->format("Y-m-d");
+    echo $dateNaiss;
 
     $query = "SELECT id, nom, prenom, pseudo, localisation, date_naissance from utilisateurs where preference = %?% and localisation = %?%";
     $stmt = $pdo->prepare($query);     //préparation de la requete
