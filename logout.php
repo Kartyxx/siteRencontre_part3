@@ -2,6 +2,7 @@
 include "class/Compteur.php";
 
 session_start();
+Compteur::decrémenter();
 
 // Détruire toutes les sessions
 $_SESSION = array();

@@ -116,9 +116,26 @@ class Utilisateur
             $this->id = $utilisateur['id'];
             $this->email = $utilisateur['email'];
             $this->motDePasse = $utilisateur['mot_de_passe'];
+            
             return $utilisateur;
         }
         return false;
     }
+
+
+
+    public function getPseudoById($id)
+    {
+        $stmt = $this->pdo->prepare("SELECT * FROM utilisateurs WHERE id = :id");
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+        $stmt->execute();
+        $utilisateur = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($utilisateur) {         
+            return $utilisateur['pseudo'];
+        }
+            return false;
+    }
 }
 ?>
+

@@ -1,6 +1,10 @@
 <?
 include "db.php";
 include_once "class/Message.php";
+include_once "class/Compteur.php";
+include_once "class/Utilisateur.php";
+include_once "utils.php";
+
 
 if(isset($_SESSION['user_id'])){
     $message = new Message($pdo);
@@ -23,6 +27,18 @@ if(isset($_SESSION['user_id'])){
 <body class="bg-gray-100">
 
     <nav class="bg-white shadow">
+        <?
+        $date = dateAjd();
+        $nb =Compteur::getNbUser();
+        echo $date." || ".$nb." utilisateurs en ligne";
+        ?>
+        <br>
+        <?
+        if(isset($_SESSION['user_id'])){
+        $pseudo = nomPrenom($_SESSION['user_id'],$pdo);
+        echo $pseudo;
+        }
+        ?>
         <div class="container mx-auto p-4 flex justify-between">
             <a href="index.php" class="text-lg font-semibold">Site de Rencontre</a>
             <div>

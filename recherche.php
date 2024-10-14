@@ -20,11 +20,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['recherche'])) {
     $genre = $_GET['genre'] ?? null;
     $localisation = $_GET['localisation'] ?? null;
 
-    $query = "SELECT id, nom, prenom, pseudo, ...";
 
-
-
-    $stmt->execute();
+    $query = "SELECT id, nom, prenom, pseudo, localisation, date_naissance from utilisateurs where preference = %?% and localisation = %?%";
+    $stmt = $pdo->prepare($query);     //préparation de la requete
+    $stmt->execute($genre,$localisation, $dzeafd);
     $utilisateurs = $stmt->fetchAll();
 }
 ?>

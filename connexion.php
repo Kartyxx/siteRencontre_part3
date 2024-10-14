@@ -1,6 +1,7 @@
 <?php
 include 'includes/db.php';
-include 'class/Utilisateur.php'; // Inclure la classe Utilisateur
+include 'class/Utilisateur.php';
+include 'class/Compteur.php'; // Inclure la classe Utilisateur
 session_start();
 
 // Création d'une instance de la classe Utilisateur
@@ -20,7 +21,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $user = $utilisateur->seConnecter($email, $mot_de_passe);
         if($user!=null){
             $_SESSION['user_id'] = $user['id'];
-           header('Location: index.php');
+            Compteur::incrementer();
+            header('Location: index.php');
             exit(); // Utilisez exit() après header() pour arrêter l'exécution du script
         }else{
             $erreur = "Identifiants incorrects";
