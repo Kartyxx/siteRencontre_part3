@@ -21,14 +21,45 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['recherche'])) {
     $localisation = $_GET['localisation'] ?? null;
 
     $date = new DateTime();
+
+
+if($age){
     $date->modify("-$age years");
-
     $dateNaiss = $date->format("Y-m-d");
-    echo $dateNaiss;
+    $dateNaissTObject = new DateTime($dateNaiss);
+    $dateNaissT = $dateNaissTObject->modify('-1 year');
+    $dateNaissT =$dateNaissT->format("Y-m-d");
 
-    $query = "SELECT id, nom, prenom, pseudo, localisation, date_naissance from utilisateurs where preference = %?% and localisation = %?%";
+}
+
+    $query = "SELECT id, nom, prenom, pseudo, localisation, date_naissance from utilisateurs WHERE 1=1 ";
+
+    if ($genre){
+        $query=$query."and genre = :genre ";
+    }
+    if($localisation){
+        $query=$query."and localisation like :localisation ";
+    }
+    if($age){
+        $query=$query."and date_naissance < :dateNaiss and date_naissance > :dateNaissT ";
+    }
+
     $stmt = $pdo->prepare($query);     //préparation de la requete
-    $stmt->execute($genre,$localisation, $dzeafd);
+
+    if ($genre){
+        $stmt->bindParam(':genre', $genre, PDO::PARAM_STR);
+    }
+    if($localisation){
+        $stmt->bindParam(':localisation', $localisation,  PDO::PARAM_STR);
+    }
+    if($age){
+        $stmt->bindParam(':dateNaiss', $dateNaiss);
+        $stmt->bindParam(':dateNaissT', $dateNaissT);
+    }
+
+
+    $stmt->execute();
+
     $utilisateurs = $stmt->fetchAll();
 }
 ?>
@@ -68,7 +99,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['recherche'])) {
                 <div class="bg-white p-4 rounded-lg shadow-md flex flex-col">
                     <h2 class="text-xl font-semibold"><?= htmlspecialchars($user['prenom'] . ' ' . $user['nom']) ?></h2>
                     <p class="">Pseudo: <?= htmlspecialchars($user['pseudo']) ?></p>
-                    <div class="mt-auto">
+                    <p class="">Date de naissance: <?= htmlspecialchars($user['date_naissance']) ?></p>
+                    <p class="">localisation: <?= htmlspecialchars($user['localisation']) ?></p>
+
+                    <div class="mt-5">
                         <a href="profil.php?id=<?= $user['id'] ?>" class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700 w-full text-center">Voir le profil</a>
                     </div>
                 </div>

@@ -30,13 +30,16 @@ if(isset($_SESSION['user_id'])){
         <?
         $date = dateAjd();
         $nb =Compteur::getNbUser();
-        echo $date." || ".$nb." utilisateurs en ligne";
+
+        $utilisateurNb = new Compteur($pdo);
+        $nbUser= $utilisateurNb->nbInscrit();
+
+        echo $date." || ".$nb." utilisateurs en ligne"." || ".$nbUser['compte']." utilisateurs inscrits";
         ?>
         <br>
         <?
         if(isset($_SESSION['user_id'])){
-        $pseudo = nomPrenom($_SESSION['user_id'],$pdo);
-        echo $pseudo;
+
         }
         ?>
         <div class="container mx-auto p-4 flex justify-between">
